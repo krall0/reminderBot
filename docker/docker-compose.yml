@@ -1,0 +1,32 @@
+version: '3.6'
+
+services:
+  reminderbot-db:
+    image: postgres:13
+    restart: always
+    healthcheck:
+      disable: true
+    ports:
+      - 5443:5432
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+
+  reminderbot:
+    image: reminderbot:latest
+    restart: always
+    healthcheck:
+      disable: true
+    ports:
+      - 8080:8080
+    environment:
+      BOT_NAME: ${BOT_NAME}
+      TLG_API_KEY: ${TLG_API_KEY}
+      DB_HOST: reminderbot-db
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      - reminderbot-db
